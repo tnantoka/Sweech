@@ -290,6 +290,6 @@ public class Sweech: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     public var languages: [String] {
-        return voices.map { v in v.language }
+        return voices.map { $0.language }
     }
 }
