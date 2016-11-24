@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Sweech'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'A text-to-speech utility.'
 
   s.description      = <<-DESC

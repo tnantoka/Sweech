@@ -9,37 +9,37 @@
 import AVFoundation
 
 public enum SweechFloatConfigration {
-    case Rate, PitchMultiplier, Volume
+    case rate, pitchMultiplier, volume
     
     public var defaultValue: Float {
         switch self {
-        case .Rate:
+        case .rate:
             return AVSpeechUtteranceDefaultSpeechRate
-        case .PitchMultiplier:
+        case .pitchMultiplier:
             return 1.0
-        case .Volume:
+        case .volume:
             return 1.0
         }
     }
 
     public var minimumValue: Float {
         switch self {
-        case .Rate:
+        case .rate:
             return AVSpeechUtteranceMinimumSpeechRate
-        case .PitchMultiplier:
+        case .pitchMultiplier:
             return 0.5
-        case .Volume:
+        case .volume:
             return 0.0
         }
     }
 
     public var maximumValue: Float {
         switch self {
-        case .Rate:
+        case .rate:
             return AVSpeechUtteranceMaximumSpeechRate
-        case .PitchMultiplier:
+        case .pitchMultiplier:
             return 2.0
-        case .Volume:
+        case .volume:
             return 1.0
         }
     }
@@ -47,7 +47,7 @@ public enum SweechFloatConfigration {
     public static let step: Float = 0.1
 }
 
-public class Sweech: NSObject, AVSpeechSynthesizerDelegate {
+open class Sweech: NSObject, AVSpeechSynthesizerDelegate {
     
     public typealias DidCallback = (AVSpeechUtterance) -> Void
     public typealias WillCallback = (NSRange, AVSpeechUtterance) -> Void
@@ -62,99 +62,99 @@ public class Sweech: NSObject, AVSpeechSynthesizerDelegate {
     
     let synthesizer = AVSpeechSynthesizer()
     
-    public var string: String = "" {
+    open var string: String = "" {
         didSet {
             if oldValue != string {
                 utterance = AVSpeechUtterance(string: string)
             }
         }
     }
-    public private(set) var utterance = AVSpeechUtterance()
+    open fileprivate(set) var utterance = AVSpeechUtterance()
 
-    public var language: String {
+    open var language: String {
         get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaultsKey.Language) ?? "en-US"
+            return UserDefaults.standard.string(forKey: UserDefaultsKey.Language) ?? "en-US"
         }
         set {
             utterance.voice = voice
             
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaultsKey.Language)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.Language)
+            UserDefaults.standard.synchronize()
         }
     }
-    public var voice: AVSpeechSynthesisVoice? {
+    open var voice: AVSpeechSynthesisVoice? {
         return AVSpeechSynthesisVoice(language: language)
     }
     
-    public var rate: Float {
+    open var rate: Float {
         get {
-            return NSUserDefaults.standardUserDefaults().floatForKey(UserDefaultsKey.Rate)
+            return UserDefaults.standard.float(forKey: UserDefaultsKey.Rate)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setFloat(newValue, forKey: UserDefaultsKey.Rate)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.Rate)
+            UserDefaults.standard.synchronize()
 
             utterance.rate = rate
         }
     }
-    public var pitchMultiplier: Float {
+    open var pitchMultiplier: Float {
         get {
-            return NSUserDefaults.standardUserDefaults().floatForKey(UserDefaultsKey.PitchMultiplier)
+            return UserDefaults.standard.float(forKey: UserDefaultsKey.PitchMultiplier)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setFloat(newValue, forKey: UserDefaultsKey.PitchMultiplier)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.PitchMultiplier)
+            UserDefaults.standard.synchronize()
 
             utterance.pitchMultiplier = pitchMultiplier
         }
     }
-    public var volume: Float {
+    open var volume: Float {
         get {
-            return muted ? 0.0 : NSUserDefaults.standardUserDefaults().floatForKey(UserDefaultsKey.Volume)
+            return muted ? 0.0 : UserDefaults.standard.float(forKey: UserDefaultsKey.Volume)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setFloat(newValue, forKey: UserDefaultsKey.Volume)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.Volume)
+            UserDefaults.standard.synchronize()
 
             utterance.volume = volume
         }
     }
-    public var muted: Bool {
+    open var muted: Bool {
         get {
-            return NSUserDefaults.standardUserDefaults().boolForKey(UserDefaultsKey.Muted)
+            return UserDefaults.standard.bool(forKey: UserDefaultsKey.Muted)
         }
         set {
-            NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: UserDefaultsKey.Muted)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(newValue, forKey: UserDefaultsKey.Muted)
+            UserDefaults.standard.synchronize()
 
             utterance.volume = volume
         }
     }
     
-    public var didStart: DidCallback?
-    public var didFinish: DidCallback?
-    public var didPause: DidCallback?
-    public var didResume: DidCallback?
-    public var didCancel: DidCallback?
+    open var didStart: DidCallback?
+    open var didFinish: DidCallback?
+    open var didPause: DidCallback?
+    open var didResume: DidCallback?
+    open var didCancel: DidCallback?
 
-    public var willSpeack: WillCallback?
+    open var willSpeack: WillCallback?
 
-    override public class func initialize() {
+    override open class func initialize() {
         let defaults = [
-            UserDefaultsKey.Rate: SweechFloatConfigration.Rate.defaultValue,
-            UserDefaultsKey.PitchMultiplier: SweechFloatConfigration.PitchMultiplier.defaultValue,
-            UserDefaultsKey.Volume: SweechFloatConfigration.Volume.defaultValue,
+            UserDefaultsKey.Rate: SweechFloatConfigration.rate.defaultValue,
+            UserDefaultsKey.PitchMultiplier: SweechFloatConfigration.pitchMultiplier.defaultValue,
+            UserDefaultsKey.Volume: SweechFloatConfigration.volume.defaultValue,
         ]
-        NSUserDefaults.standardUserDefaults().registerDefaults(defaults)
+        UserDefaults.standard.register(defaults: defaults)
     }
     
-    public static let instance = Sweech()
-    private override init() {
+    open static let instance = Sweech()
+    fileprivate override init() {
         super.init()
         synthesizer.delegate = self
     }
 
-    public func speak() {
+    open func speak() {
         // An AVSpeechUtterance shall not be enqueued twice
         if speaking {
             return
@@ -165,36 +165,36 @@ public class Sweech: NSObject, AVSpeechSynthesizerDelegate {
         utterance.pitchMultiplier = pitchMultiplier
         utterance.volume = volume
         
-        synthesizer.speakUtterance(utterance)
+        synthesizer.speak(utterance)
     }
-    public var speaking: Bool {
-        return synthesizer.speaking
-    }
-    
-    public func pause(immediate: Bool = true) {
-        synthesizer.pauseSpeakingAtBoundary(immediate ? .Immediate : .Word)
-    }
-    public var paused: Bool {
-        return synthesizer.paused
+    open var speaking: Bool {
+        return synthesizer.isSpeaking
     }
     
-    public func resume() {
+    open func pause(_ immediate: Bool = true) {
+        synthesizer.pauseSpeaking(at: immediate ? .immediate : .word)
+    }
+    open var paused: Bool {
+        return synthesizer.isPaused
+    }
+    
+    open func resume() {
         synthesizer.continueSpeaking()
     }
     
-    public func stop(immediate: Bool = true) {
-        synthesizer.stopSpeakingAtBoundary(immediate ? .Immediate : .Word)
+    open func stop(_ immediate: Bool = true) {
+        synthesizer.stopSpeaking(at: immediate ? .immediate : .word)
     }
     
-    public func reset() {
+    open func reset() {
         string = ""
         utterance = AVSpeechUtterance()
 
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UserDefaultsKey.Language)
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UserDefaultsKey.Rate)
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UserDefaultsKey.PitchMultiplier)
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UserDefaultsKey.Volume)
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(UserDefaultsKey.Muted)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.Language)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.Rate)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.PitchMultiplier)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.Volume)
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.Muted)
         
         didStart = nil
         didFinish = nil
@@ -205,91 +205,91 @@ public class Sweech: NSObject, AVSpeechSynthesizerDelegate {
         willSpeack = nil
     }
 
-    public func decrement(configuration: SweechFloatConfigration) {
+    open func decrement(_ configuration: SweechFloatConfigration) {
         switch configuration {
-        case .Rate:
-            rate = max(rate - SweechFloatConfigration.step, SweechFloatConfigration.Rate.minimumValue)
-        case .PitchMultiplier:
-            pitchMultiplier = max(pitchMultiplier - SweechFloatConfigration.step, SweechFloatConfigration.PitchMultiplier.minimumValue)
-        case .Volume:
-            volume = max(volume - SweechFloatConfigration.step, SweechFloatConfigration.Volume.minimumValue)
+        case .rate:
+            rate = max(rate - SweechFloatConfigration.step, SweechFloatConfigration.rate.minimumValue)
+        case .pitchMultiplier:
+            pitchMultiplier = max(pitchMultiplier - SweechFloatConfigration.step, SweechFloatConfigration.pitchMultiplier.minimumValue)
+        case .volume:
+            volume = max(volume - SweechFloatConfigration.step, SweechFloatConfigration.volume.minimumValue)
         }
     }
-    public func decrementable(configuration: SweechFloatConfigration) -> Bool {
+    open func decrementable(_ configuration: SweechFloatConfigration) -> Bool {
         switch configuration {
-        case .Rate:
-            return rate > SweechFloatConfigration.Rate.minimumValue
-        case .PitchMultiplier:
-            return pitchMultiplier > SweechFloatConfigration.PitchMultiplier.minimumValue
-        case .Volume:
-            return volume > SweechFloatConfigration.Volume.minimumValue
+        case .rate:
+            return rate > SweechFloatConfigration.rate.minimumValue
+        case .pitchMultiplier:
+            return pitchMultiplier > SweechFloatConfigration.pitchMultiplier.minimumValue
+        case .volume:
+            return volume > SweechFloatConfigration.volume.minimumValue
         }
     }
 
-    public func increment(configuration: SweechFloatConfigration) {
+    open func increment(_ configuration: SweechFloatConfigration) {
         switch configuration {
-        case .Rate:
-            rate = min(rate + SweechFloatConfigration.step, SweechFloatConfigration.Rate.maximumValue)
-        case .PitchMultiplier:
-            pitchMultiplier = min(pitchMultiplier + SweechFloatConfigration.step, SweechFloatConfigration.PitchMultiplier.maximumValue)
-        case .Volume:
-            volume = min(volume + SweechFloatConfigration.step, SweechFloatConfigration.Volume.maximumValue)
+        case .rate:
+            rate = min(rate + SweechFloatConfigration.step, SweechFloatConfigration.rate.maximumValue)
+        case .pitchMultiplier:
+            pitchMultiplier = min(pitchMultiplier + SweechFloatConfigration.step, SweechFloatConfigration.pitchMultiplier.maximumValue)
+        case .volume:
+            volume = min(volume + SweechFloatConfigration.step, SweechFloatConfigration.volume.maximumValue)
         }
     }
-    public func incrementable(configuration: SweechFloatConfigration) -> Bool {
+    open func incrementable(_ configuration: SweechFloatConfigration) -> Bool {
         switch configuration {
-        case .Rate:
-            return rate < SweechFloatConfigration.Rate.maximumValue
-        case .PitchMultiplier:
-            return pitchMultiplier < SweechFloatConfigration.PitchMultiplier.maximumValue
-        case .Volume:
-            return volume < SweechFloatConfigration.Volume.maximumValue
+        case .rate:
+            return rate < SweechFloatConfigration.rate.maximumValue
+        case .pitchMultiplier:
+            return pitchMultiplier < SweechFloatConfigration.pitchMultiplier.maximumValue
+        case .volume:
+            return volume < SweechFloatConfigration.volume.maximumValue
         }
     }
     
     // MARK: - AVSpeechSynthesizerDelegate
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didStartSpeechUtterance utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
         if let didStart = didStart {
             didStart(utterance)
         }
     }
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didFinishSpeechUtterance utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         if let didFinish = didFinish {
             didFinish(utterance)
         }
     }
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didPauseSpeechUtterance utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
         if let didPause = didPause {
             didPause(utterance)
         }
     }
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didContinueSpeechUtterance utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
         if let didResume = didResume {
             didResume(utterance)
         }
     }
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, didCancelSpeechUtterance utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         if let didCancel = didCancel {
             didCancel(utterance)
         }
     }
     
-    public func speechSynthesizer(synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
+    open func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
         if let willSpeack = willSpeack {
             willSpeack(characterRange, utterance)
         }
     }
     
-    public var voices: [AVSpeechSynthesisVoice] {
+    open var voices: [AVSpeechSynthesisVoice] {
         return AVSpeechSynthesisVoice.speechVoices()
     }
     
-    public var languages: [String] {
+    open var languages: [String] {
         return voices.map { $0.language }
     }
 }

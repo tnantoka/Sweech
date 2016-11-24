@@ -30,7 +30,7 @@ class SweechTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
@@ -52,7 +52,7 @@ class SweechTests: XCTestCase {
     }
 
     func testSpeack() {
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         
         let sweech = Sweech.instance
         sweech.string = "text"
@@ -68,11 +68,11 @@ class SweechTests: XCTestCase {
 //        }
         sweech.speak()
 
-        waitForExpectationsWithTimeout(15, handler: nil)
+        waitForExpectations(timeout: 15, handler: nil)
     }
     
     func testPause() {
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         
         let sweech = Sweech.instance
         sweech.string = "text"
@@ -103,47 +103,47 @@ class SweechTests: XCTestCase {
         }
         sweech.speak()
         
-        waitForExpectationsWithTimeout(15, handler: nil)
+        waitForExpectations(timeout: 15, handler: nil)
     }
     
     func testUserDefaults() {
         let sweech = Sweech.instance
         
         XCTAssertEqual(sweech.language, "en-US")
-        XCTAssertEqual(sweech.rate, SweechFloatConfigration.Rate.defaultValue)
-        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.PitchMultiplier.defaultValue)
-        XCTAssertEqual(sweech.volume, SweechFloatConfigration.Volume.defaultValue)
+        XCTAssertEqual(sweech.rate, SweechFloatConfigration.rate.defaultValue)
+        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.pitchMultiplier.defaultValue)
+        XCTAssertEqual(sweech.volume, SweechFloatConfigration.volume.defaultValue)
         XCTAssertEqual(sweech.muted, false)
     }
     
     func testIncrement() {
         let sweech = Sweech.instance
         
-        sweech.decrement(.Rate)
-        XCTAssertEqual(sweech.rate, SweechFloatConfigration.Rate.defaultValue - SweechFloatConfigration.step)
-        XCTAssertTrue(sweech.incrementable(.Rate))
+        sweech.decrement(.rate)
+        XCTAssertEqual(sweech.rate, SweechFloatConfigration.rate.defaultValue - SweechFloatConfigration.step)
+        XCTAssertTrue(sweech.incrementable(.rate))
 
-        sweech.increment(.Rate)
-        XCTAssertEqual(sweech.rate, SweechFloatConfigration.Rate.defaultValue)
-        XCTAssertTrue(sweech.decrementable(.Rate))
+        sweech.increment(.rate)
+        XCTAssertEqual(sweech.rate, SweechFloatConfigration.rate.defaultValue)
+        XCTAssertTrue(sweech.decrementable(.rate))
         
         
-        sweech.decrement(.PitchMultiplier)
-        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.PitchMultiplier.defaultValue - SweechFloatConfigration.step)
-        XCTAssertTrue(sweech.incrementable(.PitchMultiplier))
+        sweech.decrement(.pitchMultiplier)
+        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.pitchMultiplier.defaultValue - SweechFloatConfigration.step)
+        XCTAssertTrue(sweech.incrementable(.pitchMultiplier))
 
-        sweech.increment(.PitchMultiplier)
-        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.PitchMultiplier.defaultValue)
-        XCTAssertTrue(sweech.decrementable(.PitchMultiplier))
+        sweech.increment(.pitchMultiplier)
+        XCTAssertEqual(sweech.pitchMultiplier, SweechFloatConfigration.pitchMultiplier.defaultValue)
+        XCTAssertTrue(sweech.decrementable(.pitchMultiplier))
 
         
-        sweech.decrement(.Volume)
-        XCTAssertEqual(sweech.volume, SweechFloatConfigration.Volume.defaultValue - SweechFloatConfigration.step)
-        XCTAssertTrue(sweech.incrementable(.Volume))
+        sweech.decrement(.volume)
+        XCTAssertEqual(sweech.volume, SweechFloatConfigration.volume.defaultValue - SweechFloatConfigration.step)
+        XCTAssertTrue(sweech.incrementable(.volume))
 
-        sweech.increment(.Volume)
-        XCTAssertEqual(sweech.volume, SweechFloatConfigration.Volume.defaultValue)
-        XCTAssertTrue(sweech.decrementable(.Volume))
+        sweech.increment(.volume)
+        XCTAssertEqual(sweech.volume, SweechFloatConfigration.volume.defaultValue)
+        XCTAssertTrue(sweech.decrementable(.volume))
     }
 
     func testMute() {
