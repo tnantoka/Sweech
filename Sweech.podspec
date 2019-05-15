@@ -1,7 +1,8 @@
 Pod::Spec.new do |s|
   s.name             = 'Sweech'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'A text-to-speech utility.'
+  s.swift_version    = '4.0'
 
   s.description      = <<-DESC
                        A wrapper of AVSpeechSynthesizer written in Swift.

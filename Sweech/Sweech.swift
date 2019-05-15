@@ -138,8 +138,13 @@ open class Sweech: NSObject, AVSpeechSynthesizerDelegate {
     open var didCancel: DidCallback?
 
     open var willSpeack: WillCallback?
+    
+    public static let instance : Sweech = {
+        $0.initialize()
+        return $0
+    }(Sweech())
 
-    override open class func initialize() {
+    func initialize(){
         let defaults = [
             UserDefaultsKey.Rate: SweechFloatConfigration.rate.defaultValue,
             UserDefaultsKey.PitchMultiplier: SweechFloatConfigration.pitchMultiplier.defaultValue,
@@ -148,7 +153,6 @@ open class Sweech: NSObject, AVSpeechSynthesizerDelegate {
         UserDefaults.standard.register(defaults: defaults)
     }
     
-    open static let instance = Sweech()
     fileprivate override init() {
         super.init()
         synthesizer.delegate = self
